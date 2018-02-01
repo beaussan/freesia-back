@@ -1,0 +1,52 @@
+@import "src/app/core/scss/fuse";
+
+fuse-contacts-contact-list {
+    flex: 1;
+
+    .mat-table {
+        background: transparent;
+        box-shadow: none;
+
+        .mat-column-checkbox {
+            flex: 0 1 48px;
+
+            .mat-checkbox-ripple {
+                display: none !important; //fix for broken rendering
+            }
+        }
+
+        .mat-column-avatar {
+            flex: 0 1 64px;
+        }
+
+        .mat-column-buttons {
+            flex: 0 1 80px;
+        }
+
+        .mat-row {
+            position: relative;
+            cursor: pointer;
+            padding: 8px 8px 8px 24px;
+
+            .mat-cell {
+                min-width: 0;
+
+                &.mat-column-detail-button {
+                    flex: 0 1 auto;
+                    padding: 0 24px 0 0;
+                    @include media-breakpoint('gt-md') {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+#add-contact-button {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    padding: 0;
+    z-index: 99;
+}
