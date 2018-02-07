@@ -7,22 +7,47 @@
     "start": "node index.js",
     "start:watch": "nodemon",
     "prestart:prod": "tsc",
-    "start:prod": "node dist/main.js"
+    "start:prod": "node dist/main.js",
+    "migrations:run": "ts-node ./node_modules/.bin/typeorm migrations:run",
+    "migrations:revert": "ts-node ./node_modules/.bin/typeorm migrations:revert",
+    "migrations:generate": "ts-node ./node_modules/.bin/typeorm migrations:generate -n ",
+    "prettier": "prettier",
+    "lint": "tslint 'src/**/*.ts'",
+    "lint:fix": "tslint --fix 'src/**/*.ts'"
   },
   "dependencies": {
+    "@nest-middlewares/cors": "^1.0.2",
     "@nestjs/common": "^4.5.9",
     "@nestjs/core": "^4.5.10",
     "@nestjs/microservices": "^4.5.8",
+    "@nestjs/swagger": "^1.1.4",
     "@nestjs/testing": "^4.5.5",
+    "@nestjs/typeorm": "^2.0.0",
     "@nestjs/websockets": "^4.5.8",
+    "bcrypt": "^1.0.3",
+    "class-transformer": "^0.1.8",
+    "class-validator": "^0.8.1",
+    "jsonwebtoken": "^8.1.1",
+    "node-authorization": "^1.0.5",
+    "passport": "^0.4.0",
+    "passport-jwt": "^3.0.1",
+    "pg": "^7.4.1",
     "redis": "^2.7.1",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^5.5.6",
-    "typescript": "^2.6.2"
+    "typeorm": "^0.1.12",
+    "typescript": "^2.6.2",
+    "typescript-optional": "^1.5.0"
   },
   "devDependencies": {
     "@types/node": "^9.3.0",
     "nodemon": "^1.14.1",
-    "ts-node": "^4.1.0"
+    "plop": "^1.9.1",
+    "prettier": "^1.10.2",
+    "ts-node": "^4.1.0",
+    "tslint": "^5.9.1",
+    "tslint-config-airbnb": "^5.5.0",
+    "tslint-config-prettier": "^1.7.0",
+    "tslint-plugin-prettier": "^1.3.0"
   }
 }
