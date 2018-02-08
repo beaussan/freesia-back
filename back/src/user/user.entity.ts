@@ -36,10 +36,6 @@ export class User extends DbAuditModel {
     @Column({ unique: true })
     email: string;
 
-    @ApiModelProperty({ required: true })
-    @Column({ unique: true })
-    phone: string;
-
     @ManyToMany(type => Authority, authority => authority.users, {
         eager: true,
     })

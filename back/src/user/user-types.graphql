@@ -1,0 +1,26 @@
+type Authority {
+    name: String!
+}
+
+type AuthObjects {
+    resource: String!
+    resourceId: Int!
+    owner: User
+    authorities: [String]
+}
+
+type User {
+    id: Int!
+    creationDate: String
+    updateDate: String
+    version: Int
+    firstName: String!
+    lastName: String!
+    email: String!
+    authority: [Authority]
+    authObjects: [AuthObjects]
+}
+
+type Query {
+    getUser(id: Int!): User
+}

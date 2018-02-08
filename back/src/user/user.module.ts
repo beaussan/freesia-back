@@ -7,11 +7,12 @@ import { Authority } from './authority.entity';
 import { AuthorityService } from './authority.service';
 import { RolesGuard } from '../gard/roles.guard';
 import { AuthObject } from './authObject.entity';
+import { UserResolver } from './user.resolver';
 
 @Module({
     imports: [TypeOrmModule.forFeature([User, Authority, AuthObject])],
     controllers: [UserController],
-    components: [UserService, AuthorityService, RolesGuard],
+    components: [UserService, AuthorityService, RolesGuard, UserResolver],
     exports: [UserService],
 })
 export class UserModule {}
