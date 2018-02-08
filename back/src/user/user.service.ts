@@ -30,11 +30,6 @@ export class UserService {
         return Optional.ofNullable(user);
     }
 
-    async findByPhone(phone: string): Promise<Optional<User>> {
-        const user = await this.userRepository.findOne({ phone });
-        return Optional.ofNullable(user);
-    }
-
     getHashString(passwd: string): string {
         return bcrypt.hashSync(passwd, 10);
     }
@@ -52,7 +47,6 @@ export class UserService {
         user.email = userDto.email;
         user.firstName = userDto.firstName;
         user.lastName = userDto.lastName;
-        user.phone = userDto.phone;
         user.email = userDto.email.toLocaleLowerCase();
         user.password = this.getHashString(userDto.password);
         user.authority = [new Authority(ROLE_USER)];
