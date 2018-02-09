@@ -2,8 +2,6 @@ import { ApiModelProperty } from '@nestjs/swagger';
 import { IsEmail, IsMobilePhone, IsNotEmpty, IsString, Length } from 'class-validator';
 
 export class UserRegisterDto {
-    id: number;
-
     @ApiModelProperty({ required: true })
     @IsString()
     @IsNotEmpty()
@@ -23,9 +21,4 @@ export class UserRegisterDto {
     @IsEmail()
     @IsNotEmpty()
     email: string;
-
-    @ApiModelProperty({ required: true })
-    @IsMobilePhone('fr-FR')
-    @IsNotEmpty()
-    phone: string;
 }

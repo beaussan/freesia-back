@@ -44,15 +44,11 @@ export class UserController {
         description: 'There is a conflict with the email or phone number.',
     })
     async register(@Body() userRegisterDto: UserRegisterDto): Promise<User> {
-        let maybeUser = await this.userService.findByEmail(
+        const maybeUser = await this.userService.findByEmail(
             userRegisterDto.email.toLocaleLowerCase(),
         );
         if (maybeUser.isPresent) {
             throw new ConflictException('Email already taken');
-        }
-        maybeUser = await this.userService.findByPhone(userRegisterDto.phone);
-        if (maybeUser.isPresent) {
-            throw new ConflictException('Phone number already taken');
         }
         return await this.userService.saveDto(userRegisterDto);
     }

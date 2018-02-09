@@ -1,6 +1,7 @@
 import { User } from './user.entity';
 import { DbAuditModel } from '../util/dbmodel.model';
 import { Column, Entity, ManyToOne } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 export type Resource = 'User';
 export type AuthorityKey = 'CREATE' | 'DELETE' | 'EDIT' | 'READ';
@@ -22,6 +23,7 @@ export class AuthObject extends DbAuditModel {
     @Column({ type: 'varchar', isArray: true })
     authorities: AuthorityKey[];
 
+    @Exclude()
     @ManyToOne(type => User, user => user.authObjects)
     owner: User;
 }
