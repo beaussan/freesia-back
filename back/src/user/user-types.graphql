@@ -21,6 +21,25 @@ type User {
     authObjects: [AuthObjects]
 }
 
+type Token {
+    access_token: String!
+    expires_in: Int!
+}
+
+input RegisterUserDto {
+    password: String!
+    firstName: String!
+    lastName: String!
+    email: String!
+}
+
 type Query {
+    getMe: User
     getUser(id: Int!): User
+    getToken(email: String!, password: String!): Token
+    getAllUser: [User]
+}
+
+type Mutation {
+    register(newUser: RegisterUserDto!): User
 }

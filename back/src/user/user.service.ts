@@ -14,7 +14,10 @@ import { DELETE, EDIT, READ } from '../auth/constant';
 export class UserService {
     private readonly logger = new Logger('UserService', true);
 
-    constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
+    constructor(
+        @InjectRepository(User) private readonly userRepository: Repository<User>,
+        @InjectRepository(AuthObject) private readonly authObjectRepository: Repository<AuthObject>,
+    ) {}
 
     async findAll(): Promise<User[]> {
         return await this.userRepository.find();
@@ -50,8 +53,11 @@ export class UserService {
         user.email = userDto.email.toLocaleLowerCase();
         user.password = this.getHashString(userDto.password);
         user.authority = [new Authority(ROLE_USER)];
-        await this.userRepository.save(user);
-        user.authObjects = [new AuthObject('User', user.id, [READ, EDIT, DELETE], user)];
-        return this.userRepository.save(user);
+        await this.save(user);
+        const authObj = await this.authObjectRepository.save(
+            new AuthObject('User', user.id, [READ, EDIT, DELETE], user),
+        );
+        user.authObjects = [authObj];
+        return user;
     }
 }

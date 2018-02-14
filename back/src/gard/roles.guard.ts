@@ -1,4 +1,10 @@
-import { Guard, CanActivate, ExecutionContext, Logger } from '@nestjs/common';
+import {
+    Guard,
+    CanActivate,
+    ExecutionContext,
+    Logger,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { Observable } from 'rxjs/Observable';
 import { Reflector } from '@nestjs/core';
 import { UserService } from '../user/user.service';
@@ -21,13 +27,13 @@ export class RolesGuard implements CanActivate {
 
         if (!req.user) {
             this.logger.log('No user found, stop');
-            return false;
+            throw new UnauthorizedException();
         }
         const user: User = req.user.user;
         if (!user) {
             this.logger.log('No user id found, stop');
             this.logger.log(`${user}`);
-            return false;
+            throw new UnauthorizedException();
         }
         const userDb = await this.userService.findById(user.id);
 
@@ -36,7 +42,11 @@ export class RolesGuard implements CanActivate {
                 .get()
                 .authority.map(item => item.name)
                 .find(role => !!roles.find(item => item === role));
+        if (userDb.isPresent && hasRole()) {
+            return true;
+        }
+        throw new UnauthorizedException();
 
-        return userDb.isPresent && hasRole();
+        // return userDb.isPresent && hasRole();
     }
 }

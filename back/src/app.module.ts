@@ -6,10 +6,14 @@ import { CorsMiddleware } from '@nest-middlewares/cors';
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 import { GraphQLModule, GraphQLFactory } from '@nestjs/graphql';
 
+import { Strategy as AnonymousStrategy } from 'passport-anonymous';
+
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 
 import { AppController } from './app.controller';
+import { AuthMiddleware } from './middlewares/auth.middleware';
+import { SECRET_KEY } from './auth/constant';
 
 @Module({
     imports: [TypeOrmModule.forRoot(), GraphQLModule, UserModule, AuthModule],
@@ -20,13 +24,19 @@ export class ApplicationModule implements NestModule {
     constructor(private readonly graphQLFactory: GraphQLFactory) {}
 
     configure(consumer: MiddlewaresConsumer): void {
-        // Auth routes
+        passport.use(new AnonymousStrategy());
+
+        const graphqlRoute = { path: '/graphql', method: RequestMethod.ALL };
+
+        consumer
+            .apply(passport.authenticate(['jwt', 'anonymous'], { session: false }))
+            .forRoutes(graphqlRoute);
+
         consumer
             .apply(passport.authenticate('jwt', { session: false }))
             .forRoutes(
                 { path: '/auth/authorized', method: RequestMethod.ALL },
                 { path: '/auth/me', method: RequestMethod.ALL },
-                { path: '/graphql', method: RequestMethod.ALL },
                 { path: '/user', method: RequestMethod.GET },
                 { path: '/user/:id', method: RequestMethod.ALL },
             );
@@ -35,19 +45,24 @@ export class ApplicationModule implements NestModule {
         const typeDefs = this.graphQLFactory.mergeTypesByPaths('./**/*.graphql');
         const schema = this.graphQLFactory.createSchema({ typeDefs });
 
-        const devToken =
-            'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjgsImlhdCI6MTUxODA0MDY2MywiZXhwIjoxNTM1MzIwNjYzfQ.HmiU_seCSb4_b5nzCMkab4XDyFM_v6fSN9JMqvm7lhU';
-
         consumer
             .apply(
                 graphiqlExpress({
                     endpointURL: '/graphql',
-                    passHeader: `"Authorization": "${devToken}"`,
                 }),
             )
             .forRoutes({ path: '/graphiql', method: RequestMethod.GET })
-            .apply(graphqlExpress(req => ({ schema, rootValue: req })))
-            .forRoutes({ path: '/graphql', method: RequestMethod.ALL });
+
+            .apply(
+                graphqlExpress(req => ({
+                    schema,
+                    rootValue: req,
+                    context: {
+                        user: req.user ? req.user.user : undefined,
+                    },
+                })),
+            )
+            .forRoutes(graphqlRoute);
 
         // Cros middleware
         consumer.apply(CorsMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
