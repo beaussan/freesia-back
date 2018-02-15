@@ -11,13 +11,9 @@ import { Strategy as AnonymousStrategy } from 'passport-anonymous';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 
-import { AppController } from './app.controller';
-import { AuthMiddleware } from './middlewares/auth.middleware';
-import { SECRET_KEY } from './auth/constant';
-
 @Module({
     imports: [TypeOrmModule.forRoot(), GraphQLModule, UserModule, AuthModule],
-    controllers: [AppController],
+    controllers: [],
     components: [],
 })
 export class ApplicationModule implements NestModule {
@@ -31,15 +27,6 @@ export class ApplicationModule implements NestModule {
         consumer
             .apply(passport.authenticate(['jwt', 'anonymous'], { session: false }))
             .forRoutes(graphqlRoute);
-
-        consumer
-            .apply(passport.authenticate('jwt', { session: false }))
-            .forRoutes(
-                { path: '/auth/authorized', method: RequestMethod.ALL },
-                { path: '/auth/me', method: RequestMethod.ALL },
-                { path: '/user', method: RequestMethod.GET },
-                { path: '/user/:id', method: RequestMethod.ALL },
-            );
 
         // Graphql
         const typeDefs = this.graphQLFactory.mergeTypesByPaths('./**/*.graphql');
