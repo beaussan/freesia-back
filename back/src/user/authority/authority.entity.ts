@@ -1,5 +1,6 @@
 import { Entity, Column, ManyToMany } from 'typeorm';
 import { User } from '../user.entity';
+import { ApiModelProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 
 @Entity()
@@ -8,6 +9,7 @@ export class Authority {
         this.name = name;
     }
 
+    @ApiModelProperty()
     @Column({ length: 200, primary: true })
     name: string;
 
