@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ApplicationModule } from './app.module';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
 import { ValidationPipe } from '@nestjs/common';
@@ -16,6 +17,16 @@ async function bootstrap() {
     app.useGlobalPipes(new ValidationPipe());
 
     app.useGlobalGuards(authGuard);
+
+    const options = new DocumentBuilder()
+        .setTitle('Dashy docs')
+        .setDescription('The Dashy API description')
+        .setVersion('1.0')
+        .addTag('Auth')
+        .addBearerAuth()
+        .build();
+    const document = SwaggerModule.createDocument(app, options);
+    SwaggerModule.setup('/docs', app, document);
 
     await app.listen(3000);
 }

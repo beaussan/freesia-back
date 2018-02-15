@@ -11,11 +11,11 @@ import {
     VersionColumn,
     OneToMany,
 } from 'typeorm';
-import { Authority } from './authority/authority.entity';
+import { Authority } from './authority.entity';
 import { ApiModelProperty } from '@nestjs/swagger';
 import { Exclude, Type } from 'class-transformer';
 import { DbAuditModel } from '../util/dbmodel.model';
-import { AuthObject, AuthorityKey, Resource } from './authority/authObject.entity';
+import { AuthObject, AuthorityKey, Resource } from './authObject.entity';
 import { UnauthorizedException } from '@nestjs/common';
 
 @Entity()
