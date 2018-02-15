@@ -11,13 +11,12 @@ import { Strategy as AnonymousStrategy } from 'passport-anonymous';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 
-import { AppController } from './app.controller';
 import { AuthMiddleware } from './middlewares/auth.middleware';
 import { SECRET_KEY } from './auth/constant';
 
 @Module({
     imports: [TypeOrmModule.forRoot(), GraphQLModule, UserModule, AuthModule],
-    controllers: [AppController],
+    controllers: [],
     components: [],
 })
 export class ApplicationModule implements NestModule {
