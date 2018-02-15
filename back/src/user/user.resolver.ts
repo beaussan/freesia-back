@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { User } from './user.entity';
 import { UserConnected } from '../decorator/user.decorator';
-import { ROLE_ADMIN, ROLE_USER } from './authority.constants';
+import { ROLE_ADMIN, ROLE_USER } from './authorityes/authority.constants';
 import { Roles } from '../decorator/roles.decorator';
 import { RolesGuard } from '../gard/roles.guard';
 import { AuthService } from '../auth/auth.service';
@@ -26,7 +26,7 @@ export class UserResolver {
     @Roles(ROLE_USER)
     @Query('getAllUser')
     async getAllUser(obj, args, { user }, info): Promise<User[]> {
-        if(user.authority.find(role => role.name === ROLE_ADMIN)) {
+        if (user.authority.find(role => role.name === ROLE_ADMIN)) {
             return await this.userService.findAll();
         }
         const users = await this.userService.findAll();

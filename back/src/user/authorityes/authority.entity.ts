@@ -1,5 +1,5 @@
 import { Entity, Column, ManyToMany } from 'typeorm';
-import { User } from './user.entity';
+import { User } from '../user.entity';
 import { ApiModelProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 

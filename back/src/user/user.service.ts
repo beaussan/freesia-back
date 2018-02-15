@@ -5,9 +5,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import Optional from 'typescript-optional';
 import { UserRegisterDto } from './dto/user.register.dto';
-import { ROLE_USER } from './authority.constants';
-import { Authority } from './authority.entity';
-import { AuthObject } from './authObject.entity';
+import { ROLE_USER } from './authorityes/authority.constants';
+import { Authority } from './authorityes/authority.entity';
+import { AuthObject } from './authorityes/authObject.entity';
 import { DELETE, EDIT, READ } from '../auth/constant';
 
 @Component()
