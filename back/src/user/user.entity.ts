@@ -12,7 +12,6 @@ import {
     OneToMany,
 } from 'typeorm';
 import { Authority } from './authority/authority.entity';
-import { ApiModelProperty } from '@nestjs/swagger';
 import { Exclude, Type } from 'class-transformer';
 import { DbAuditModel } from '../util/dbmodel.model';
 import { AuthObject, AuthorityKey, Resource } from './authority/authObject.entity';
@@ -20,11 +19,9 @@ import { UnauthorizedException } from '@nestjs/common';
 
 @Entity()
 export class User extends DbAuditModel {
-    @ApiModelProperty({ required: true })
     @Column({ length: 500 })
     firstName: string;
 
-    @ApiModelProperty({ required: true })
     @Column({ length: 500 })
     lastName: string;
 
@@ -32,14 +29,12 @@ export class User extends DbAuditModel {
     @Exclude()
     password: string;
 
-    @ApiModelProperty({ required: true })
     @Column({ unique: true })
     email: string;
 
     @ManyToMany(type => Authority, authority => authority.users, {
         eager: true,
     })
-    @ApiModelProperty({ isArray: true, type: Authority })
     @JoinTable()
     @Type(() => Authority)
     authority: Authority[];
