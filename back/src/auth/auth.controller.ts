@@ -11,9 +11,10 @@ import {
 import { AuthService } from './auth.service';
 import { ApiBearerAuth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { UserConnected } from '../decorator/user.decorator';
-import { LoginDto } from './login.dto';
+import { LoginDto } from './dto/login.dto';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
+import { RenewTokenDto } from './dto/renewToken.dto';
 
 @Controller('auth')
 @ApiUseTags('Auth')
@@ -22,6 +23,14 @@ export class AuthController {
         private readonly userService: UserService,
         private readonly authService: AuthService,
     ) {}
+
+    @Post('refresh')
+    @HttpCode(HttpStatus.OK)
+    @ApiResponse({ status: HttpStatus.OK, description: 'The token was correctly generated.' })
+    @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'The refresh token is invalid.' })
+    public async refreshToken(@Body() refreshToken: RenewTokenDto) {
+        return this.authService.createTokenFromRefreshToken(refreshToken.refreshToken);
+    }
 
     @Post('token')
     @HttpCode(HttpStatus.OK)

@@ -17,6 +17,7 @@ import { Exclude, Type } from 'class-transformer';
 import { DbAuditModel } from '../util/dbmodel.model';
 import { AuthObject, AuthorityKey, Resource } from './authorityes/authObject.entity';
 import { UnauthorizedException } from '@nestjs/common';
+import { TokenAuth } from './authorityes/token.entity';
 
 @Entity()
 export class User extends DbAuditModel {
@@ -50,6 +51,12 @@ export class User extends DbAuditModel {
         cascadeInsert: true,
     })
     authObjects: AuthObject[];
+
+    @OneToMany(type => TokenAuth, object => object.owner, {
+        cascadeUpdate: true,
+        cascadeInsert: true,
+    })
+    tokens: TokenAuth[];
 
     public canDoOnEntity(entityType: Resource, idRessource: number, access: AuthorityKey): boolean {
         return (

@@ -64,6 +64,11 @@ export class UserResolver {
         throw new UnauthorizedException();
     }
 
+    @Query('refreshToken')
+    async refreshToken(obj, { token }, context, info): Promise<any> {
+        return this.authService.createTokenFromRefreshToken(token);
+    }
+
     @Mutation('register')
     async registerUser(obj, { newUser }, context, info): Promise<User> {
         const maybeUser = await this.userService.findByEmail(newUser.email.toLocaleLowerCase());

@@ -14,7 +14,8 @@
         "eofline": false,
         "quotemark": [
             true,
-            "single"
+            "single",
+            "avoid-escape"
         ],
         "member-access": [
             false
