@@ -45,6 +45,7 @@
     "rxjs": "^5.5.6",
     "typeorm": "^0.1.12",
     "typescript": "^2.7.2",
+    "ts-node": "^4.1.0",
     "typescript-optional": "^1.5.0"
   },
   "devDependencies": {
@@ -52,7 +53,6 @@
     "nodemon": "^1.15.0",
     "plop": "^1.9.1",
     "prettier": "^1.10.2",
-    "ts-node": "^4.1.0",
     "tslint": "^5.9.1",
     "tslint-config-airbnb": "^5.6.0",
     "tslint-config-prettier": "^1.8.0",
