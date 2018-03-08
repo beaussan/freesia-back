@@ -1,0 +1,47 @@
+type Authority {
+    name: String!
+}
+
+type AuthObjects {
+    resource: String!
+    resourceId: Int!
+    owner: User
+    authorities: [String]
+}
+
+type User {
+    id: Int!
+    creationDate: String
+    updateDate: String
+    version: Int
+    firstName: String!
+    lastName: String!
+    email: String!
+    authority: [Authority]
+    authObjects: [AuthObjects]
+}
+
+type Token {
+    access_token: String!
+    refresh_token: String!
+    expires_in: Int!
+}
+
+input RegisterUserDto {
+    password: String!
+    firstName: String!
+    lastName: String!
+    email: String!
+}
+
+type Query {
+    getMe: User
+    getUser(id: Int!): User
+    getToken(email: String!, password: String!): Token
+    refreshToken(token: String!): Token
+    getAllUser: [User]
+}
+
+type Mutation {
+    register(newUser: RegisterUserDto!): User
+}

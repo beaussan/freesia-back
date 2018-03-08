@@ -1,0 +1,11 @@
+version: '2'
+services:
+    uberback-postgresql:
+        image: postgres:9.6.5
+        # volumes:
+        #     - ~/volumes/dashy/postgresql/:/var/lib/postgresql/data/
+        environment:
+            - POSTGRES_USER=dashy
+            - POSTGRES_PASSWORD=passwdlol
+        ports:
+            - 5432:5432
