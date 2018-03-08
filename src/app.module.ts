@@ -12,7 +12,20 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
-    imports: [TypeOrmModule.forRoot(), GraphQLModule, UserModule, AuthModule],
+    imports: [
+        TypeOrmModule.forRoot({
+            type: 'postgres',
+            url: process.env.DATABASE_URL || 'postgres://dashy:passwdlol@localhost:5432/dashy',
+            entities: [__dirname + '/../**/**.entity{.ts,.js}'],
+            synchronize: true,
+            cli: {
+                migrationsDir: __dirname + '/../src/migration',
+            },
+        }),
+        GraphQLModule,
+        UserModule,
+        AuthModule,
+    ],
     controllers: [],
     components: [],
 })
