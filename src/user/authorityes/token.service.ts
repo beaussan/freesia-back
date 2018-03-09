@@ -13,7 +13,7 @@ export class TokenService {
         @InjectRepository(TokenAuth) private readonly tokenAuthRepository: Repository<TokenAuth>,
     ) {
         this.removeOldTokens();
-        cron.schedule('* */10 * * * *', this.removeOldTokens.bind(this));
+        cron.schedule('00 */10 * * * *', this.removeOldTokens.bind(this));
     }
 
     public save(token: TokenAuth): Promise<TokenAuth> {
