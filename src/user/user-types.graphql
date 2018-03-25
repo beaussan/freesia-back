@@ -25,6 +25,7 @@ type Token {
     access_token: String!
     refresh_token: String!
     expires_in: Int!
+    user: User
 }
 
 input RegisterUserDto {
@@ -37,11 +38,11 @@ input RegisterUserDto {
 type Query {
     getMe: User
     getUser(id: Int!): User
-    getToken(email: String!, password: String!): Token
-    refreshToken(token: String!): Token
     getAllUser: [User]
 }
 
 type Mutation {
     register(newUser: RegisterUserDto!): User
+    getToken(email: String!, password: String!): Token
+    refreshToken(token: String!): Token
 }

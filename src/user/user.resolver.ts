@@ -51,7 +51,7 @@ export class UserResolver {
         return userDb.orElseThrow(() => new NotFoundException());
     }
 
-    @Query('getToken')
+    @Mutation('getToken')
     async getToken(obj, { email, password }, context, info): Promise<any> {
         const maybeUser = await this.userService.findByEmail(email);
         if (!maybeUser.isPresent) {
@@ -64,7 +64,7 @@ export class UserResolver {
         throw new UnauthorizedException();
     }
 
-    @Query('refreshToken')
+    @Mutation('refreshToken')
     async refreshToken(obj, { token }, context, info): Promise<any> {
         return this.authService.createTokenFromRefreshToken(token);
     }

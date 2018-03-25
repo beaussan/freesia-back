@@ -33,6 +33,9 @@ export class ApplicationModule implements NestModule {
     constructor(private readonly graphQLFactory: GraphQLFactory) {}
 
     configure(consumer: MiddlewaresConsumer): void {
+        // Cros middleware
+        consumer.apply(CorsMiddleware).forRoutes({ path: '**', method: RequestMethod.ALL });
+
         passport.use(new AnonymousStrategy());
 
         const graphqlRoute = { path: '/graphql', method: RequestMethod.ALL };
@@ -72,8 +75,5 @@ export class ApplicationModule implements NestModule {
                 })),
             )
             .forRoutes(graphqlRoute);
-
-        // Cros middleware
-        consumer.apply(CorsMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
     }
 }

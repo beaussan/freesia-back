@@ -21,6 +21,7 @@ export class AuthService {
         const token = jwt.sign(userInToken, SECRET_KEY, { expiresIn: EXPIRE_TOKEN });
         const refreshToken = await this.generateRefreshToken(user);
         return {
+            user,
             expires_in: EXPIRE_TOKEN,
             access_token: token,
             refresh_token: refreshToken.token,
