@@ -63,7 +63,7 @@ export class ApplicationModule implements NestModule {
             .forRoutes({ path: '/graphiql', method: RequestMethod.GET })
 
             .apply(
-                graphqlExpress(req => ({
+                graphqlExpress((req: any) => ({
                     schema,
                     rootValue: req,
                     context: {
