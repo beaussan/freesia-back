@@ -1,4 +1,4 @@
-import { Component, Inject, Logger } from '@nestjs/common';
+import { Component, Inject, Logger, UnauthorizedException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -31,6 +31,32 @@ export class UserService {
     async findByEmail(email: string): Promise<Optional<User>> {
         const user = await this.userRepository.findOne({ email });
         return Optional.ofNullable(user);
+    }
+
+    async editUserEmail(email: string, user: User, passwd: string) {
+        if (!this.doPasswordMatch(passwd, user)) {
+            throw new UnauthorizedException();
+        }
+        user.email = email;
+        return this.save(user);
+    }
+
+    async editUserPassword(newPassw: string, oldPasswd: string, user: User) {
+        if (!this.doPasswordMatch(oldPasswd, user)) {
+            throw new UnauthorizedException();
+        }
+        user.password = this.getHashString(newPassw);
+        return this.save(user);
+    }
+
+    async updateUserInfo(user: User, firstname: string, lastname: string) {
+        if (firstname) {
+            user.firstName = firstname;
+        }
+        if (lastname) {
+            user.lastName = lastname;
+        }
+        return this.save(user);
     }
 
     getHashString(passwd: string): string {

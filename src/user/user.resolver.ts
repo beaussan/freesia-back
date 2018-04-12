@@ -1,6 +1,7 @@
 import { UserService } from './user.service';
 import { Mutation, Query, ResolveProperty, Resolver } from '@nestjs/graphql';
 import {
+    BadRequestException,
     ConflictException,
     NotFoundException,
     Param,
@@ -14,6 +15,9 @@ import { ROLE_ADMIN, ROLE_USER } from './authorityes/authority.constants';
 import { Roles } from '../decorator/roles.decorator';
 import { RolesGuard } from '../gard/roles.guard';
 import { AuthService } from '../auth/auth.service';
+import { UserRegisterDto } from './dto/user.register.dto';
+import { plainToClass } from 'class-transformer';
+import { validate, Validator } from 'class-validator';
 
 @UseGuards(RolesGuard)
 @Resolver('User')
@@ -71,10 +75,42 @@ export class UserResolver {
 
     @Mutation('register')
     async registerUser(obj, { newUser }, context, info): Promise<User> {
-        const maybeUser = await this.userService.findByEmail(newUser.email.toLocaleLowerCase());
+        const entity = plainToClass(UserRegisterDto, newUser)[0];
+        const errors = await validate(entity);
+        if (errors.length > 0) {
+            throw new BadRequestException(errors);
+        }
+
+        const maybeUser = await this.userService.findByEmail(entity.email.toLocaleLowerCase());
         if (maybeUser.isPresent) {
             throw new ConflictException('Email already taken');
         }
-        return await this.userService.saveDto(newUser);
+        return await this.userService.saveDto(entity);
+    }
+
+    @Roles(ROLE_USER)
+    @Mutation('updateEmail')
+    async updateEmail(obj, { password, email }, { user }, info): Promise<User> {
+        const validator = new Validator();
+        if (!validator.isEmpty(email)) {
+            throw new BadRequestException('email not valid');
+        }
+        return this.userService.editUserEmail(email, user, password);
+    }
+
+    @Roles(ROLE_USER)
+    @Mutation('updateUserInfo')
+    async updateUserInfo(obj, { firstname, lastname }, { user }, info): Promise<User> {
+        return this.userService.updateUserInfo(user, firstname, lastname);
+    }
+
+    @Roles(ROLE_USER)
+    @Mutation('updatePassword')
+    async updatePassword(obj, { oldPassword, newPassword }, { user }, info): Promise<User> {
+        const validator = new Validator();
+        if (!validator.minLength(newPassword, 6)) {
+            throw new BadRequestException('new password too short');
+        }
+        return this.userService.editUserPassword(newPassword, oldPassword, user);
     }
 }
