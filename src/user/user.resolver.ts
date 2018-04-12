@@ -75,11 +75,13 @@ export class UserResolver {
 
     @Mutation('register')
     async registerUser(obj, { newUser }, context, info): Promise<User> {
-        const entity = plainToClass(UserRegisterDto, newUser)[0];
-        const errors = await validate(entity);
+        const entityTab = plainToClass(UserRegisterDto, newUser);
+        const errors = await validate(entityTab);
         if (errors.length > 0) {
             throw new BadRequestException(errors);
         }
+        console.log(entityTab);
+        const entity = entityTab;
 
         const maybeUser = await this.userService.findByEmail(entity.email.toLocaleLowerCase());
         if (maybeUser.isPresent) {
