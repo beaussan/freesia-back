@@ -12,8 +12,8 @@ import { AuthService } from './auth.service';
 import { ApiBearerAuth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { UserConnected } from '../decorator/user.decorator';
 import { LoginDto } from './dto/login.dto';
-import { UserService } from '../user/user.service';
-import { User } from '../user/user.entity';
+import { UserService } from '../app/user/user.service';
+import { User } from '../app/user/user.entity';
 import { RenewTokenDto } from './dto/renewToken.dto';
 
 @Controller('auth')

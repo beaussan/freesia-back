@@ -4,13 +4,13 @@ import { ApplicationModule } from './app.module';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
 import { ValidationPipe } from '@nestjs/common';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
-import { UserModule } from './user/user.module';
+import { AppModule } from './app/app.module';
 import { RolesGuard } from './gard/roles.guard';
 
 async function bootstrap() {
     const app = await NestFactory.create(ApplicationModule);
 
-    const authGuard = app.select(UserModule).get(RolesGuard);
+    const authGuard = app.select(AppModule).get(RolesGuard);
 
     app.useGlobalInterceptors(new LoggingInterceptor(), new TransformInterceptor());
 

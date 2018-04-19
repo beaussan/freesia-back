@@ -1,11 +1,11 @@
 import * as jwt from 'jsonwebtoken';
 import { Component, Inject, Logger, UnauthorizedException } from '@nestjs/common';
 import { generate } from 'rand-token';
-import { User } from '../user/user.entity';
+import { User } from '../app/user/user.entity';
 import { SECRET_KEY, EXPIRE_TOKEN } from './constant';
-import { UserService } from '../user/user.service';
-import { TokenAuth } from '../user/authorityes/token.entity';
-import { TokenService } from '../user/authorityes/token.service';
+import { UserService } from '../app/user/user.service';
+import { TokenAuth } from '../app/user/authorityes/token.entity';
+import { TokenService } from '../app/user/authorityes/token.service';
 
 @Component()
 export class AuthService {

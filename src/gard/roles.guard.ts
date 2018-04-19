@@ -7,9 +7,9 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs/Observable';
 import { Reflector } from '@nestjs/core';
-import { UserService } from '../user/user.service';
+import { UserService } from '../app/user/user.service';
 import { plainToClass } from 'class-transformer';
-import { User } from '../user/user.entity';
+import { User } from '../app/user/user.entity';
 
 @Guard()
 export class RolesGuard implements CanActivate {
@@ -35,7 +35,12 @@ export class RolesGuard implements CanActivate {
             this.logger.log(`${user}`);
             throw new UnauthorizedException();
         }
+
+        this.logger.log(`going to fetch : ${user} ${user.id}`);
+
         const userDb = await this.userService.findById(user.id);
+
+        this.logger.log('User from db : ' + userDb);
 
         const hasRole = () =>
             !!userDb

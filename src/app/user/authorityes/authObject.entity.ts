@@ -1,9 +1,9 @@
 import { User } from '../user.entity';
-import { DbAuditModel } from '../../util/dbmodel.model';
+import { DbAuditModel } from '../../../util/dbmodel.model';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
-export type Resource = 'User';
+export type Resource = 'User' | 'TodoList';
 export type AuthorityKey = 'CREATE' | 'DELETE' | 'EDIT' | 'READ';
 
 @Entity()

@@ -8,7 +8,7 @@ import { GraphQLModule, GraphQLFactory } from '@nestjs/graphql';
 
 import { Strategy as AnonymousStrategy } from 'passport-anonymous';
 
-import { UserModule } from './user/user.module';
+import { AppModule } from './app/app.module';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
@@ -21,9 +21,10 @@ import { AuthModule } from './auth/auth.module';
             cli: {
                 migrationsDir: __dirname + '/../src/migration',
             },
+            // logging: 'all',
         }),
         GraphQLModule,
-        UserModule,
+        AppModule,
         AuthModule,
     ],
     controllers: [],

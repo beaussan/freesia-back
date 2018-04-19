@@ -14,10 +14,11 @@ import {
 import { Authority } from './authorityes/authority.entity';
 import { ApiModelProperty } from '@nestjs/swagger';
 import { Exclude, Type } from 'class-transformer';
-import { DbAuditModel } from '../util/dbmodel.model';
+import { DbAuditModel } from '../../util/dbmodel.model';
 import { AuthObject, AuthorityKey, Resource } from './authorityes/authObject.entity';
 import { UnauthorizedException } from '@nestjs/common';
 import { TokenAuth } from './authorityes/token.entity';
+import { TodoList } from '../todos/todolist.entity';
 
 @Entity()
 export class User extends DbAuditModel {
@@ -45,6 +46,12 @@ export class User extends DbAuditModel {
     @Type(() => Authority)
     authority: Authority[];
 
+    @OneToMany(type => TodoList, object => object.owner, {
+        cascadeUpdate: true,
+        cascadeInsert: true,
+    })
+    todoLists: TodoList[];
+
     @OneToMany(type => AuthObject, object => object.owner, {
         cascadeUpdate: true,
         eager: true,
@@ -67,6 +74,14 @@ export class User extends DbAuditModel {
                     value.authorities.indexOf(access) !== -1,
             ).length > 0
         );
+    }
+
+    public getAllIdsWithPermition(entityType: Resource, access: AuthorityKey): number[] {
+        return this.authObjects
+            .filter(
+                value => value.resource === entityType && value.authorities.indexOf(access) !== -1,
+            )
+            .map(value => value.resourceId);
     }
 
     public canDoOnEntityOrThrows(entityType: Resource, id: number, access: AuthorityKey) {

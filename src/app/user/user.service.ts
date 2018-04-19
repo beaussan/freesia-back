@@ -7,8 +7,8 @@ import Optional from 'typescript-optional';
 import { UserRegisterDto } from './dto/user.register.dto';
 import { ROLE_USER } from './authorityes/authority.constants';
 import { Authority } from './authorityes/authority.entity';
-import { AuthObject } from './authorityes/authObject.entity';
-import { DELETE, EDIT, READ } from '../auth/constant';
+import { AuthObject, AuthorityKey, Resource } from './authorityes/authObject.entity';
+import { DELETE, EDIT, READ } from '../../auth/constant';
 
 @Component()
 export class UserService {
@@ -69,6 +69,18 @@ export class UserService {
 
     save(user: User): Promise<User> {
         return this.userRepository.save(user);
+    }
+
+    async addAuthority(
+        res: Resource,
+        idRessource: number,
+        user: User,
+        authorityes: AuthorityKey[],
+    ) {
+        const authObj = await this.authObjectRepository.save(
+            new AuthObject(res, idRessource, authorityes, user),
+        );
+        user.authObjects = [...user.authObjects, authObj];
     }
 
     async saveDto(userDto: UserRegisterDto): Promise<User> {
