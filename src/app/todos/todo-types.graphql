@@ -1,0 +1,32 @@
+type TodoList {
+    title: String!
+    owner: User
+    id: Int!
+    todoItems: [TodoItem]
+}
+
+type TodoItem {
+    id: Int!
+    text: String!
+    isDone: Boolean!
+    isArchived: Boolean
+    isHighPriority: Boolean
+    todoList: TodoList
+}
+
+type Query {
+    allTodoList: [TodoList]
+    todoListById(id: Int): TodoList
+}
+
+type Mutation {
+    createTodoList(name: String!): TodoList
+    addTodoItem(listId: Int!, message: String!): TodoList
+
+    toggleTodo(itemId: Int!): TodoItem
+    toggleTodoPriority(itemId: Int!): TodoItem
+    archiveTodo(itemId: Int!): TodoItem
+
+    editTodoItemText(itemId: Int!, text: String!): TodoItem
+    editTodoListText(itemId: Int!, text: String!): TodoList
+}

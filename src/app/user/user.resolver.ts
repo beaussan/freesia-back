@@ -10,11 +10,11 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { User } from './user.entity';
-import { UserConnected } from '../decorator/user.decorator';
+import { UserConnected } from '../../decorator/user.decorator';
 import { ROLE_ADMIN, ROLE_USER } from './authorityes/authority.constants';
-import { Roles } from '../decorator/roles.decorator';
-import { RolesGuard } from '../gard/roles.guard';
-import { AuthService } from '../auth/auth.service';
+import { Roles } from '../../decorator/roles.decorator';
+import { RolesGuard } from '../../gard/roles.guard';
+import { AuthService } from '../../auth/auth.service';
 import { UserRegisterDto } from './dto/user.register.dto';
 import { plainToClass } from 'class-transformer';
 import { validate, Validator } from 'class-validator';
@@ -80,21 +80,19 @@ export class UserResolver {
         if (errors.length > 0) {
             throw new BadRequestException(errors);
         }
-        console.log(entityTab);
-        const entity = entityTab;
 
-        const maybeUser = await this.userService.findByEmail(entity.email.toLocaleLowerCase());
+        const maybeUser = await this.userService.findByEmail(newUser.email.toLocaleLowerCase());
         if (maybeUser.isPresent) {
             throw new ConflictException('Email already taken');
         }
-        return await this.userService.saveDto(entity);
+        return await this.userService.saveDto(newUser);
     }
 
     @Roles(ROLE_USER)
     @Mutation('updateEmail')
     async updateEmail(obj, { password, email }, { user }, info): Promise<User> {
         const validator = new Validator();
-        if (!validator.isEmpty(email)) {
+        if (validator.isEmpty(email) || !validator.isEmail(email)) {
             throw new BadRequestException('email not valid');
         }
         return this.userService.editUserEmail(email, user, password);
