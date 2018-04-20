@@ -3,6 +3,8 @@ import { MiddlewaresConsumer, Module, NestModule, RequestMethod } from '@nestjs/
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CorsMiddleware } from '@nest-middlewares/cors';
 
+import { formatResponse } from 'apollo-logger';
+
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 import { GraphQLModule, GraphQLFactory } from '@nestjs/graphql';
 
@@ -69,6 +71,7 @@ export class ApplicationModule implements NestModule {
             .apply(
                 graphqlExpress((req: any) => ({
                     schema,
+                    formatResponse,
                     rootValue: req,
                     context: {
                         user: req.user ? req.user.user : undefined,
