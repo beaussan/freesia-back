@@ -92,7 +92,7 @@ export class UserResolver {
     @Mutation('updateEmail')
     async updateEmail(obj, { password, email }, { user }, info): Promise<User> {
         const validator = new Validator();
-        if (!validator.isEmpty(email)) {
+        if (validator.isEmpty(email) || !validator.isEmail(email)) {
             throw new BadRequestException('email not valid');
         }
         return this.userService.editUserEmail(email, user, password);
