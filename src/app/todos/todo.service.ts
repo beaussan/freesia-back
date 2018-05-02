@@ -8,7 +8,6 @@ import {
 import { Repository } from 'typeorm';
 import { User } from '../user/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as bcrypt from 'bcrypt';
 import Optional from 'typescript-optional';
 
 import { DELETE, EDIT, READ } from '../../auth/constant';

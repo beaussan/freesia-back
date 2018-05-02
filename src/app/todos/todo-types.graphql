@@ -27,6 +27,9 @@ type Mutation {
     toggleTodoPriority(itemId: Int!): TodoItem
     archiveTodo(itemId: Int!): TodoItem
 
+    editTodoListName(listeId: Int!, name: String!): TodoList
+    editTodoItemName(itemId: Int!, name: String!): TodoItem
+
     editTodoItemText(itemId: Int!, text: String!): TodoItem
     editTodoListText(itemId: Int!, text: String!): TodoList
 }
