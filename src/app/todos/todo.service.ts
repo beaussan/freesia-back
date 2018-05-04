@@ -45,10 +45,10 @@ export class TodoService {
     sortTodoList(list: TodoList): TodoList {
         list.todoItems = list.todoItems.sort((a, b) => {
             if (a.isHighPriority && b.isHighPriority) {
-                return 0;
+                return a.id - b.id;
             }
             if (!a.isHighPriority && !b.isHighPriority) {
-                return 0;
+                return a.id - b.id;
             }
             if (a.isHighPriority) {
                 return -1;
