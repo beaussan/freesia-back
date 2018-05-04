@@ -62,18 +62,6 @@ export class TodoResolver {
 
     @Roles(ROLE_USER)
     @Mutation()
-    async editTodoItemText(obj, { itemId, text }, { user }, info): Promise<TodoItem> {
-        return this.todoService.todoItemEditText(user, itemId, text);
-    }
-
-    @Roles(ROLE_USER)
-    @Mutation()
-    async editTodoListText(obj, { itemId, text }, { user }, info): Promise<TodoList> {
-        return this.todoService.todoListEditText(user, itemId, text);
-    }
-
-    @Roles(ROLE_USER)
-    @Mutation()
     async editTodoListName(obj, { itemId, text }, { user }, info): Promise<TodoList> {
         return this.todoService.todoListEditText(user, itemId, text);
     }
