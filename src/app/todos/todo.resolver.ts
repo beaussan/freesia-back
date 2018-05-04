@@ -6,6 +6,7 @@ import { ROLE_USER } from '../user/authorityes/authority.constants';
 import { Roles } from '../../decorator/roles.decorator';
 import { TodoList } from './todolist.entity';
 import { TodoItem } from './todoitem.entity';
+import Optional from 'typescript-optional';
 
 @UseGuards(RolesGuard)
 @Resolver('Todo')
@@ -15,15 +16,18 @@ export class TodoResolver {
     @Roles(ROLE_USER)
     @Query()
     async allTodoList(obj, options, { user }, info): Promise<TodoList[]> {
-        return this.todoService.findAllListsForUser(user);
+        const list = await this.todoService.findAllListsForUser(user);
+        return Optional.ofNullable(list)
+            .map(l => this.todoService.filterArchivedList(l))
+            .get();
     }
 
     @Roles(ROLE_USER)
     @Query()
     async todoListById(obj, { id }, { user }, info): Promise<TodoList> {
-        return (await this.todoService.findListById(id, user)).orElseThrow(
-            () => new NotFoundException(),
-        );
+        return (await this.todoService.findListById(id, user))
+            .map(list => this.todoService.filterArchived(list))
+            .orElseThrow(() => new NotFoundException());
     }
 
     @Roles(ROLE_USER)

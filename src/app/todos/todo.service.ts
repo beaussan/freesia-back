@@ -28,7 +28,8 @@ export class TodoService {
 
     async findAllListsForUser(user: User): Promise<TodoList[]> {
         const ids = user.getAllIdsWithPermition('TodoList', READ);
-        return await this.todoListRepository.findByIds(ids);
+        const list = await this.todoListRepository.findByIds(ids);
+        return this.sortMutipleLists(list);
     }
 
     async findListById(
@@ -37,8 +38,40 @@ export class TodoService {
         access: AuthorityKey = READ,
     ): Promise<Optional<TodoList>> {
         user.canDoOnEntityOrThrows('TodoList', id, access);
-        const list = await this.todoListRepository.findOne({ id });
-        return Optional.ofNullable(list);
+        const list = await this.todoListRepository.findOneById(id);
+        return Optional.ofNullable(list).map(l => this.sortTodoList(l));
+    }
+
+    sortTodoList(list: TodoList): TodoList {
+        list.todoItems = list.todoItems.sort((a, b) => {
+            if (a.isHighPriority && b.isHighPriority) {
+                return a.updateDate.getTime() - b.updateDate.getTime();
+            }
+            if (!a.isHighPriority && !b.isHighPriority) {
+                return a.updateDate.getTime() - b.updateDate.getTime();
+            }
+            if (a.isHighPriority) {
+                return -1;
+            }
+            if (b.isHighPriority) {
+                return 1;
+            }
+            return 0;
+        });
+        return list;
+    }
+
+    sortMutipleLists(lists: TodoList[]): TodoList[] {
+        return lists.map(l => this.sortTodoList(l));
+    }
+
+    filterArchived(list: TodoList): TodoList {
+        list.todoItems = list.todoItems.filter(todo => !todo.isArchived);
+        return list;
+    }
+
+    filterArchivedList(lists: TodoList[]): TodoList[] {
+        return lists.map(l => this.filterArchived(l));
     }
 
     async findItemById(id: number): Promise<Optional<TodoItem>> {
@@ -53,8 +86,8 @@ export class TodoService {
     ): Promise<Optional<TodoItem>> {
         const todoItemWithList = await this.todoItemRepository
             .createQueryBuilder('todoItem')
-            .innerJoin('todoItem.todoList', 'todoList')
-            .where('todoItem.id = :id', { id: 1 })
+            .leftJoinAndSelect('todoItem.todoList', 'todoList')
+            .where('todoItem.id = :id', { id })
             .getOne();
 
         return Optional.ofNullable(todoItemWithList).filter(todoItem =>
@@ -87,6 +120,7 @@ export class TodoService {
     }
 
     async toggleTodo(user: User, itemId: number): Promise<TodoItem> {
+        this.logger.log('Toggle todo request : ' + itemId);
         const todo = (await this.findItemByIdWithUserCheck(itemId, user, EDIT)).orElseThrow(
             () => new NotFoundException(),
         );
